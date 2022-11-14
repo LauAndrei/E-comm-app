@@ -32,3 +32,6 @@ bin
 .idea/.idea.E-comm app.dir/.idea/.gitignore
 API/appsettings.json
 *.db
+.idea
+*.db-shm
+*.db-wal
