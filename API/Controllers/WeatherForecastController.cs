@@ -5,6 +5,7 @@ namespace API.Controllers;
 [ApiController]
 [Route("[controller]")] //placeholder for the controller name
                         //(will take the name of the class: WeatherForecast)
+[ApiExplorerSettings(IgnoreApi = true)]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]

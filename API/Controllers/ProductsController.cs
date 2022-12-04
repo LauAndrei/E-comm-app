@@ -1,17 +1,14 @@
 ﻿using API.Dtos;
+using API.Errors;
 using AutoMapper;
-using Infrastructure.Data;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")] //not necessary to write api at the beginning, but it's conventional
-public class ProductsController : ControllerBase
+public class ProductsController : BaseApiController
 {
     private readonly IGenericRepository<Product> _productsRepo;
     private readonly IGenericRepository<ProductBrand> _productBrandRepo;
@@ -40,7 +37,13 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
     {
         var spec = new ProductsWithTypesAndBrandsSpecification(id);
+        
         var product = await _productsRepo.GetEntityWithSpec(spec);
+
+        if (product == null)
+        {
+            return NotFound(new ApiResponse(404));
+        }
         return _mapper.Map<Product, ProductToReturnDto>(product);
     }
 
