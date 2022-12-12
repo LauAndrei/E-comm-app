@@ -20,5 +20,18 @@ public class StoreContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // Sql Lite does not support decimal type, so we do this to convert all properties from decimal type to double
+        if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+        { 
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(decimal));
+                foreach (var property in properties)
+                {
+                    modelBuilder.Entity(entityType.Name).Property(property.Name).HasConversion<double>();
+                }
+            }
+        }
     }
 }

@@ -27,6 +27,17 @@ namespace API
 
             services.AddApplicationServices(); // extension
             services.AddSwaggerDocumentation();
+            
+            // we need to enable cors if we want to see our result coming from the API in the browser 
+            services.AddCors(option =>
+            {
+                // we are basically telling our clients application that if it's running on an unsecured port,
+                // we're not going to return a header that's going allow our browser to display that info 
+                option.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
 
         }
 
@@ -45,6 +56,8 @@ namespace API
             app.UseRouting();
             app.UseStaticFiles(); // this is needed for our server to serve static content from our API (the images)
 
+            app.UseCors("CorsPolicy");
+                
             app.UseAuthorization();
 
             app.UseSwaggerDocumentation();
