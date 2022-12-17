@@ -1,0 +1,37 @@
+.logo {
+    transform: scale(3.5);
+    margin-left: 100px;
+}
+
+.cart-no {
+    position: absolute;
+    min-height: 25px;
+    min-width: 25px;
+    border-radius: 50%;
+    font-size: 1em;
+    background: blue;
+    color: white;
+    text-align: center;
+    top: -12px;
+    right: 32px;
+}
+
+@media screen and (max-width: 1100px) {
+    .logo {
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 970px) {
+    .logo {
+        transform: scale(1.9);
+        margin-right: 40px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .logo {
+        transform: scale(2.5);
+        margin-right: 0;
+    }
+}
