@@ -1,4 +1,5 @@
 {
     "prettier.bracketSameLine": true,
-    "prettier.tabWidth": 4
+    "prettier.tabWidth": 4,
+    "angular.enable-strict-mode-prompt": false
 }
