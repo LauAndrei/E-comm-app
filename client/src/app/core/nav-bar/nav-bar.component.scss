@@ -1,6 +1,7 @@
 .logo {
     transform: scale(3.5);
     margin-left: 100px;
+    cursor: pointer;
 }
 
 .cart-no {
@@ -14,6 +15,15 @@
     text-align: center;
     top: -12px;
     right: 32px;
+}
+
+a {
+    text-decoration: none;
+    color: #343a40;
+
+    &.active {
+        color: orange;
+    }
 }
 
 @media screen and (max-width: 1100px) {

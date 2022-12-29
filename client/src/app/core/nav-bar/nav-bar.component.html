@@ -6,12 +6,19 @@
         style="max-height: 70px"
         class="mt-2 logo"
         alt="logo"
+        routerLink="/"
     />
     <!-- <img src="/assets/images/logo.png" alt="logo" style="max-height: 70px" /> -->
     <nav class="my-2 my-md-0 mr-md-3 text-uppercase" style="font-size: larger">
-        <a class="p-2 text-dark" href="#">Home</a>
-        <a class="p-2 text-dark" href="#">Shop</a>
-        <a class="p-2 text-dark" href="#">Contact</a>
+        <a
+            class="p-2"
+            [routerLink]="['/']"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Home</a
+        >
+        <a class="p-2" routerLink="/shop" routerLinkActive="active">Shop</a>
+        <a class="p-2" href="#">Contact</a>
     </nav>
     <div class="d-flex align-items-center">
         <a class="position-relative">
