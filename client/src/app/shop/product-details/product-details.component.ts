@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IProduct } from 'src/app/shared/Models/product';
+import { BreadcrumbService } from 'xng-breadcrumb';
 import { ShopService } from '../shop.service';
 
 @Component({
@@ -13,8 +14,11 @@ export class ProductDetailsComponent implements OnInit {
 
     constructor(
         private shopService: ShopService,
-        private activatedRoute: ActivatedRoute
-    ) {}
+        private activatedRoute: ActivatedRoute,
+        private breadcrumbService: BreadcrumbService
+    ) {
+        this.breadcrumbService.set('@productDetails', ' ');
+    }
 
     ngOnInit(): void {
         this.loadProduct();
@@ -24,6 +28,8 @@ export class ProductDetailsComponent implements OnInit {
         this.shopService.getProduct(this.getProductId()).subscribe(
             (product) => {
                 this.product = product;
+                // we can access the alias by using '@'
+                this.breadcrumbService.set('@productDetails', product.name);
             },
             (err) => {
                 console.log(err);
