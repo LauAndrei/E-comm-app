@@ -2,6 +2,7 @@ using API.Extensions;
 using API.Helpers;
 using API.Middleware;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -25,6 +26,9 @@ namespace API
             services.AddControllers();
             services.AddDbContext<StoreContext>(x =>
                 x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+    
+            // we're having a completely separate database for identity
+            services.AddDbContext<AppIdentityDbContext>(x => x.UseSqlite(_config.GetConnectionString("IdentityConnection")));
 
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
@@ -33,6 +37,7 @@ namespace API
             });
             
             services.AddApplicationServices(); // extension
+            services.AddIdentityServices(_config); // extension
             services.AddSwaggerDocumentation();
             
             // we need to enable cors if we want to see our result coming from the API in the browser 
@@ -64,7 +69,8 @@ namespace API
             app.UseStaticFiles(); // this is needed for our server to serve static content from our API (the images)
 
             app.UseCors("CorsPolicy");
-                
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSwaggerDocumentation();
