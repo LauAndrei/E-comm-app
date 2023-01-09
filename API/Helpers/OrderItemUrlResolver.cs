@@ -1,0 +1,29 @@
+﻿using API.Dtos;
+using AutoMapper;
+using Core.Entities.OrderAggregate;
+
+namespace API.Helpers;
+
+/**
+ * Transforms the url of the picture from images/products/item.png to apiurl/images/products/item.png
+ * Get the full url of the image
+ */
+public class OrderItemUrlResolver : IValueResolver<OrderItem, OrderItemDto, string>
+{
+    private readonly IConfiguration _config;
+
+    public OrderItemUrlResolver(IConfiguration config)
+    {
+        _config = config;
+    }
+    
+    public string Resolve(OrderItem source, OrderItemDto destination, string destMember, ResolutionContext context)
+    {
+        if (!string.IsNullOrEmpty(source.ItemOrdered.PictureUrl))
+        {
+            return _config["ApiUrl"] + source.ItemOrdered.PictureUrl;
+        }
+
+        return null;
+    }
+}
