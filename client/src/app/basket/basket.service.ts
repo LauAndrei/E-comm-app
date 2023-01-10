@@ -8,6 +8,7 @@ import {
     IBasketItem,
     IBasketTotals
 } from '../shared/models/basket';
+import { IDeliveryMethod } from '../shared/models/deliveryMethod';
 import { IProduct } from '../shared/Models/product';
 
 @Injectable({
@@ -21,6 +22,8 @@ export class BasketService {
 
     private basketTotalSource = new BehaviorSubject<IBasketTotals>(null);
     basketTotal$ = this.basketTotalSource.asObservable();
+
+    shipping = 0;
 
     constructor(private http: HttpClient) {}
 
@@ -95,6 +98,19 @@ export class BasketService {
         }
     }
 
+    /**
+     * This method is used in createOrder() method from checkoutService
+     * because when we create an order, the basket is automatically
+     * removed from the redis DB, so we don't need to go back to our api
+     * to remove something that's not there, we just need to remove the
+     * basket locally
+     */
+    deleteLocalBasket() {
+        this.basketSource.next(null);
+        this.basketTotalSource.next(null);
+        localStorage.removeItem('basket_id');
+    }
+
     deleteBasket(basket: IBasket) {
         return this.http
             .delete(this.baseUrl + 'basket?id=' + basket.id)
@@ -108,6 +124,16 @@ export class BasketService {
                     console.log(err);
                 }
             );
+    }
+
+    /**
+     * This method gets the price of shipping and then calculates the total
+     * by calling the function "calculateTotals()"
+     * @param deliveryMethod the delivery method
+     */
+    setShippingPrice(deliveryMethod: IDeliveryMethod) {
+        this.shipping = deliveryMethod.price;
+        this.calculateTotals();
     }
 
     private createBasket(): IBasket {
@@ -141,7 +167,7 @@ export class BasketService {
 
     private calculateTotals() {
         const basket = this.getCurrentBasketValue();
-        const shipping = 0;
+        const shipping = this.shipping;
         const subtotal = basket.items.reduce(
             (a, b) => b.price * b.quantity + a,
             0
